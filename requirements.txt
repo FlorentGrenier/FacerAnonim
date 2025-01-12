@@ -1,0 +1,2 @@
+mistralai==1.2.6
+transformers==4.48.0
