@@ -1,12 +1,18 @@
-# Projet d'Anonymisation de texte avec envoie à un LLM
+# FacerAnonim 
+Projet d'anonymisation de texte avec envoie à un LLM
 
 ## Description
 Ce projet permet d'anonymiser des entités nommées (personnes, organisations, lieux, etc.) dans un texte en remplaçant les mots identifiés par des identifiants uniques et cohérents. Il est utile pour masquer des informations sensibles tout en conservant la structure et la lisibilité du texte.
 
 ## Fonctionnalités
+
 - Extraction et anonymisation des entités nommées
 - Remplacement des entités par des identifiants uniques et cohérents
 - Génération d'un dictionnaire des correspondances entre entités et identifiants
+
+⚠️ **IMPORTANT :**
+Le projet ne prend en charge que la langue française pour le moment.**  
+**Cette fonctionnalité est en cours de développement (WIP) et pourrait être étendue à d'autres langues dans le futur.
 
 ## Installation
 ### Prérequis
@@ -16,23 +22,53 @@ Ce projet permet d'anonymiser des entités nommées (personnes, organisations, l
 ```python 
 pip install -r requirements.txt
 ```
+## Fonctionnement
+```mermaid
+---
+title: Comment fonctionne FacerAnonim ?
+---
+stateDiagram-v2
+    [*] --> anonymizer : Texte de l'utilisateur
+    anonymizer --> llm : Texte annoymisé
+    llm --> desanonymizer : Texte généré annonymisé 
+    desanonymizer --> [*] : Texte désanonymisé
+    
+    anonymizer: Anonymisation
+    state anonymizer {
+        direction LR
+        A1: Détection des entités
+        A2: Extraction des entités
+        A3: Remplacement par des caractères de remplacement
+        A1 --> A2
+        A2 --> A3
+        
+    }
+
+    llm: LLM
+    state llm {
+        direction LR
+        B1: Mistral
+    }
+
+    desanonymizer: Désanonymisation
+    state desanonymizer {
+        direction LR
+        C1: Application du remplacement
+    }
+```
 
 ## Utilisation
 ### Exemple de code
 ```python 
-text = "Le Crédit Mutuel Arkéa est basé en Bretagne. Louis Lichou était le président."
-entities = [
-    {"start": 3, "end": 18, "entity_group": "ORG", "word": "Crédit Mutuel"},
-    {"start": 19, "end": 24, "entity_group": "ORG", "word": "Arkéa"},
-    {"start": 54, "end": 65, "entity_group": "PER", "word": "Louis Lichou"}
-]
+from anonymization import EntityAnonymizer
 
-modified_text, entity_ids = replace_words_with_entity_groups_consistent_ids(text, entities)
+anonymizer = EntityAnonymizer()
+anonymized_text  = anonymizer.anonymizer(text)
 
-print(modified_text)
-# "Le [ORG1] [ORG2] est basé en Bretagne. [PER1] était le président."
-print(entity_ids)
-# {('ORG', 'Crédit Mutuel'): 'ORG1', ('ORG', 'Arkéa'): 'ORG2', ('PER', 'Louis Lichou'): 'PER1'}
+llm_handler = LLMHandler(provider="mistral", api_key=os.environ["API_KEY_MISTRAL"])
+
+response_llm = llm_handler.send_to_llm(anonymized_text)
+response = anonymizer.deanonymizer(response_llm)
 ```
 
 ### Prise en charge des modèles LLM
@@ -48,7 +84,10 @@ llm_handler = LLMHandler(provider="mistral", api_key=os.environ["API_KEY_MISTRAL
 ```
 
 ## Tests
+
+![Python status](https://github.com/FlorentGrenier/Anonymisation/actions/workflows/main.yml/badge.svg)
+
 Les tests unitaires sont disponibles dans test.py. Pour les exécuter :
 ```python 
-python -m unittest test.py
+pytest tests/test_entity_anonymizer.py
 ```
