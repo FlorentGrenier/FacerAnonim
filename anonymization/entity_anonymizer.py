@@ -60,7 +60,7 @@ class EntityAnonymizer:
 
 
             modified_text += text[current_position:start]
-            modified_text += f"[{entity_ids[key]}]"
+            modified_text += f" [{entity_ids[key]}]"
             current_position = end
 
         modified_text += text[current_position:]

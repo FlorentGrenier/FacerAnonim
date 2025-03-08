@@ -5,6 +5,7 @@ from unittest.mock import patch
 class TestEntityAnonymizer(unittest.TestCase):
 
     def setUp(self):
+        self.maxDiff = None
         self.anonymizer = EntityAnonymizer(is_log_anonymizer=False)
 
         self.user_text = (
@@ -34,10 +35,10 @@ class TestEntityAnonymizer(unittest.TestCase):
         modified_text, entity_ids = self.anonymizer.anonymizer(self.user_text)
         
         modified_text_expected = (
-            "Le[ORG1] est une banque[LOC1], elle comprend le[ORG2] qui est une banque située en[LOC2]"
-            " et le[ORG3] qui est une banque qui se situe principalement en[LOC3]. C'est sous la présidence de[PER1], " 
-            "dans les années 1980 que différentes filiales sont créées au sein du[ORG2] et forment les principales filiales" 
-            "du groupe qui existent encore aujourd'hui ([ORG4],[ORG5],[ORG6], etc.)."
+            "Le [ORG1] est une banque [LOC1], elle comprend le [ORG2] qui est une banque située en [LOC2]"
+            " et le [ORG3] qui est une banque qui se situe principalement en [LOC3]. C'est sous la présidence de [PER1], " 
+            "dans les années 1980 que différentes filiales sont créées au sein du [ORG2] et forment les principales filiales " 
+            "du groupe qui existent encore aujourd'hui ( [ORG4], [ORG5], [ORG6], etc.)."
         )
 
         entity_ids_expected = {
@@ -50,33 +51,33 @@ class TestEntityAnonymizer(unittest.TestCase):
         self.assertEqual(modified_text, modified_text_expected)
         self.assertEqual(entity_ids, entity_ids_expected)
 
-    def test_replace_entity_ids_with_text(self):
-        generated_text = (
-            "et qui jouent un rôle clé dans le développement et la diversification des activités bancaires du groupe."
-            "Ces filiales couvrent des domaines variés tels que la gestion d'actifs, le financement des entreprises,"
-            "et les services bancaires internationaux, renforçant ainsi la position du [ORG1] en tant qu'acteur majeur sur la scène financière mondiale."
-            "Elles ont également contribué à l'innovation et à l'expansion géographique du groupe, en s'implantant sur de nouveaux marchés et en développant"
-            "des solutions adaptées aux besoins spécifiques de leurs clients, qu'il s'agisse de particuliers, de professionnels ou de grandes entreprises."
-            "Sous l'impulsion de [PER1], le [ORG1] a su consolider son réseau international tout en maintenant une forte présence locale grâce à ses filiales comme [ORG4], [ORG5] et [ORG6],"
-            "qui restent des piliers stratégiques du groupe."
-        )
-        
-        entity_ids = {
+    def test_deanonymizer(self):
+        self.anonymizer.entity_ids = {
             ('ORG', 'Crédit Mutuel Arkéa'): 'ORG1', ('LOC', 'Française'): 'LOC1', 
             ('ORG', 'CMB'): 'ORG2', ('LOC', 'Bretagne'): 'LOC2', ('ORG', 'CMSO'): 'ORG3', 
             ('LOC', 'Aquitaine'): 'LOC3', ('PER', 'Louis Lichou'): 'PER1', ('ORG', 'Federal Finance'): 'ORG4', 
             ('ORG', 'Suravenir'): 'ORG5', ('ORG', 'Financo'): 'ORG6'
         }
 
-        final_text = self.anonymizer._replace_entity_ids_with_text_from_tuple_dict(generated_text, entity_ids)
+        generated_text = (
+            "et qui jouent un rôle clé dans le développement et la diversification des activités bancaires du groupe."
+            "Ces filiales couvrent des domaines variés tels que la gestion d'actifs, le financement des entreprises,"
+            "et les services bancaires internationaux, renforçant ainsi la position du [ORG1] en tant qu'acteur majeur sur la scène financière mondiale."
+            "Elles ont également contribué à l'innovation et à l'expansion géographique du groupe, en s'implantant sur de nouveaux marchés et en développant "
+            "des solutions adaptées aux besoins spécifiques de leurs clients, qu'il s'agisse de particuliers, de professionnels ou de grandes entreprises."
+            "Sous l'impulsion de [PER1], le [ORG1] a su consolider son réseau international tout en maintenant une forte présence locale grâce à ses filiales comme [ORG4], [ORG5] et [ORG6],"
+            "qui restent des piliers stratégiques du groupe."
+        )
+
+        final_text = self.anonymizer.deanonymizer(generated_text)
 
         final_text_expected = ("et qui jouent un rôle clé dans le développement et la diversification des activités bancaires du groupe."
                                "Ces filiales couvrent des domaines variés tels que la gestion d'actifs, le financement des entreprises,"
                                "et les services bancaires internationaux, renforçant ainsi la position du Crédit Mutuel Arkéa en tant qu'acteur majeur sur la scène financière mondiale."
-                               "Elles ont également contribué à l'innovation et à l'expansion géographique du groupe, en s'implantant sur de nouveaux marchés et en développant"
+                               "Elles ont également contribué à l'innovation et à l'expansion géographique du groupe, en s'implantant sur de nouveaux marchés et en développant "
                                "des solutions adaptées aux besoins spécifiques de leurs clients, qu'il s'agisse de particuliers, de professionnels ou de grandes entreprises."
                                "Sous l'impulsion de Louis Lichou, le Crédit Mutuel Arkéa a su consolider son réseau international tout en maintenant une forte présence locale grâce à ses filiales"
-                               "comme Federal Finance, Suravenir et Financo,qui restent des piliers stratégiques du groupe.")
+                               " comme Federal Finance, Suravenir et Financo,qui restent des piliers stratégiques du groupe.")
 
         self.assertEqual(final_text, final_text_expected)
 
