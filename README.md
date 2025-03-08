@@ -35,6 +35,18 @@ print(entity_ids)
 # {('ORG', 'Crédit Mutuel'): 'ORG1', ('ORG', 'Arkéa'): 'ORG2', ('PER', 'Louis Lichou'): 'PER1'}
 ```
 
+### Prise en charge des modèles LLM
+
+Ce projet prend actuellement en charge les modèles suivants :
+
+- **Mistral** (via l'API Mistral)
+
+Vous pouvez configurer le modèle souhaité lors de l'initialisation du handler LLM. Exemple :
+
+```python
+llm_handler = LLMHandler(provider="mistral", api_key=os.environ["API_KEY_MISTRAL"])
+```
+
 ## Tests
 Les tests unitaires sont disponibles dans test.py. Pour les exécuter :
 ```python 
