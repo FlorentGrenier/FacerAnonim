@@ -1,12 +1,12 @@
 import unittest
-from entity_anonymizer import EntityAnonymizer
+from entity_anonymizer import FacerAnonymizer
 from llm_handler import LLMHandler
 from unittest.mock import MagicMock
 
 class TestIntegration(unittest.TestCase):
 
     def setUp(self):
-        self.anonymizer = EntityAnonymizer(log_to_json=False)
+        self.anonymizer = FacerAnonymizer(log_to_json=False)
         self.llm_handler = MagicMock(spec=LLMHandler)
 
     def test_full_integration(self):

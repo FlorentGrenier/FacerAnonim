@@ -1,10 +1,10 @@
 import re, json, logging, os, datetime
 from transformers import pipeline
 
-class EntityAnonymizer:
+class FacerAnonymizer:
     def __init__(self, is_log_anonymizer=False, log_filename="log_anonymizer.json"):
         """
-        Constructeur pour initialiser la classe EntityAnonymizer.
+        Constructeur pour initialiser la classe FacerAnonymizer.
         :param log_to_json: Booléen pour décider si on doit loguer dans un fichier JSON.
         :param log_filename: Nom du fichier JSON pour enregistrer les entités et leurs identifiants.
         """
@@ -27,15 +27,15 @@ class EntityAnonymizer:
       
         return clean_text, entity_ids
 
-    def deanonymizer(self, text):
+    def desanonymizer(self, text):
         """
         Restaure le texte original en remplaçant les identifiants par les entités.
         :param text: Le texte anonymisé avec des identifiants
         :return: Le texte restauré
         """
 
-        deanonymizer_text = self._replace_entity_ids_with_text_from_tuple_dict(text, self.entity_ids)
-        return deanonymizer_text
+        desanonymizer_text = self._replace_entity_ids_with_text_from_tuple_dict(text, self.entity_ids)
+        return desanonymizer_text
 
     def _replace_words_with_entity_groups_consistent_ids(self, text, entities):
         entities = sorted(entities, key=lambda x: x['start'])

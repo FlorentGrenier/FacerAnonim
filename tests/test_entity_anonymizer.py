@@ -1,12 +1,12 @@
 import unittest, xmlrunner
-from anonymization.entity_anonymizer import EntityAnonymizer
+from anonymization.entity_anonymizer import FacerAnonymizer
 from unittest.mock import patch
 
-class TestEntityAnonymizer(unittest.TestCase):
+class TestFacerAnonymizer(unittest.TestCase):
 
     def setUp(self):
         self.maxDiff = None
-        self.anonymizer = EntityAnonymizer(is_log_anonymizer=False)
+        self.anonymizer = FacerAnonymizer(is_log_anonymizer=False)
 
         self.user_text = (
             "Le Crédit Mutuel Arkéa est une banque Française, elle comprend le CMB "
@@ -51,7 +51,7 @@ class TestEntityAnonymizer(unittest.TestCase):
         self.assertEqual(modified_text, modified_text_expected)
         self.assertEqual(entity_ids, entity_ids_expected)
 
-    def test_deanonymizer(self):
+    def test_desanonymizer(self):
         self.anonymizer.entity_ids = {
             ('ORG', 'Crédit Mutuel Arkéa'): 'ORG1', ('LOC', 'Française'): 'LOC1', 
             ('ORG', 'CMB'): 'ORG2', ('LOC', 'Bretagne'): 'LOC2', ('ORG', 'CMSO'): 'ORG3', 
@@ -69,7 +69,7 @@ class TestEntityAnonymizer(unittest.TestCase):
             "qui restent des piliers stratégiques du groupe."
         )
 
-        final_text = self.anonymizer.deanonymizer(generated_text)
+        final_text = self.anonymizer.desanonymizer(generated_text)
 
         final_text_expected = ("et qui jouent un rôle clé dans le développement et la diversification des activités bancaires du groupe."
                                "Ces filiales couvrent des domaines variés tels que la gestion d'actifs, le financement des entreprises,"

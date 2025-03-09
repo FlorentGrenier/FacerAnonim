@@ -60,12 +60,12 @@ stateDiagram-v2
 ## Utilisation
 ### Exemple de code
 ```python 
-from anonymization import EntityAnonymizer
+from anonymization import FacerAnonymizer
 from mistralai import Mistral
 
 client= Mistral(api_key=os.environ["API_KEY_MISTRAL"])
 
-anonymizer = EntityAnonymizer()
+anonymizer = FacerAnonymizer()
 anonymized_text = anonymizer.anonymizer("Le Crédit Mutuel Arkéa est une banque Française")
 
 response = client.chat.complete(
@@ -78,7 +78,7 @@ response = client.chat.complete(
             ]
         )
 
-response = anonymizer.deanonymizer(response.choices[0].message.content)
+response = anonymizer.desanonymizer(response.choices[0].message.content)
 ```
 <!--
 ### Prise en charge des modèles LLM

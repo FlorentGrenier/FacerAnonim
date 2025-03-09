@@ -1,1 +1,3 @@
-from .entity_anonymizer import EntityAnonymizer
+from .entity_anonymizer import FacerAnonymizer
+
+__all__ = ["FacerAnonymizer"]

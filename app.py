@@ -1,16 +1,16 @@
 import os, argparse
-from anonymization import EntityAnonymizer
+from anonymization import FacerAnonymizer
 from llm_handler import LLMHandler
 
 
 
 def chat(text):
     try:
-        anonymizer = EntityAnonymizer(is_log_anonymizer=True)
+        anonymizer = FacerAnonymizer(is_log_anonymizer=True)
         anonymized_text  = anonymizer.anonymizer(text)
         llm_handler = LLMHandler(provider="mistral", api_key=os.environ["API_KEY_MISTRAL"])
         response_llm = llm_handler.send_to_llm(anonymized_text )
-        response = anonymizer.deanonymizer(response_llm)
+        response = anonymizer.desanonymizer(response_llm)
         return response
     
     except Exception as e:
