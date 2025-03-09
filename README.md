@@ -61,16 +61,26 @@ stateDiagram-v2
 ### Exemple de code
 ```python 
 from anonymization import EntityAnonymizer
+from mistralai import Mistral
+
+client= Mistral(api_key=os.environ["API_KEY_MISTRAL"])
 
 anonymizer = EntityAnonymizer()
-anonymized_text  = anonymizer.anonymizer(text)
+anonymized_text = anonymizer.anonymizer("Le Crédit Mutuel Arkéa est une banque Française")
 
-llm_handler = LLMHandler(provider="mistral", api_key=os.environ["API_KEY_MISTRAL"])
+response = client.chat.complete(
+            model = "mistral-large-latest",
+            messages = [
+                {
+                    "role": "user",
+                    "content": anonymized_text,
+                },
+            ]
+        )
 
-response_llm = llm_handler.send_to_llm(anonymized_text)
-response = anonymizer.deanonymizer(response_llm)
+response = anonymizer.deanonymizer(response.choices[0].message.content)
 ```
-
+<!--
 ### Prise en charge des modèles LLM
 
 Ce projet prend actuellement en charge les modèles suivants :
@@ -82,6 +92,7 @@ Vous pouvez configurer le modèle souhaité lors de l'initialisation du handler 
 ```python
 llm_handler = LLMHandler(provider="mistral", api_key=os.environ["API_KEY_MISTRAL"])
 ```
+-->
 
 ## Tests
 
