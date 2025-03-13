@@ -1,14 +1,11 @@
 import os
-from anonymization import FacerAnonymizer, LLMHandler
+from anonymization import LLMHandler
 
 
 def chat(text):
     try:
-        anonymizer = FacerAnonymizer(is_log_anonymizer=True)
-        anonymized_text  = anonymizer.anonymize(text)
         llm_handler = LLMHandler(provider="mistral", api_key=os.environ["API_KEY_MISTRAL"])
-        response_llm = llm_handler.send_to_llm(anonymized_text )
-        response = anonymizer.desanonymize(response_llm)
+        response = llm_handler.send_to_llm(text)
         return response
     
     except Exception as e:

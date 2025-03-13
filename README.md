@@ -44,7 +44,7 @@ response = client.chat.complete(
 
 response = anonymizer.desanonymizer(response.choices[0].message.content)
 ```
-<!--
+
 ### Prise en charge des modèles LLM
 
 Ce projet prend actuellement en charge les modèles suivants :
@@ -54,16 +54,10 @@ Ce projet prend actuellement en charge les modèles suivants :
 Vous pouvez configurer le modèle souhaité lors de l'initialisation du handler LLM. Exemple :
 
 ```python
-from anonymization import FacerAnonymizer, LLMHandler
-import os
-
-anonymizer = FacerAnonymizer(is_log_anonymizer=False)
-anonymized_text  = anonymizer.anonymize('Bonjour je m\'apelle Tom')[0]
+from anonymization import LLMHandler
 llm_handler = LLMHandler(provider="mistral", api_key=os.environ["API_KEY_MISTRAL"])
-response_llm = llm_handler.send_to_llm(anonymized_text)
-response = anonymizer.desanonymize(response_llm)
+response = llm_handler.send_to_llm(text)
 ```
--->
 
 ## Fonctionnement
 ```mermaid

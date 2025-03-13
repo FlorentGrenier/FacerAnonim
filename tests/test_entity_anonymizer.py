@@ -32,7 +32,7 @@ class TestFacerAnonymizer(unittest.TestCase):
         ]
 
     def test_anonymizer(self):
-        modified_text, entity_ids = self.anonymizer.anonymize(self.user_text)
+        modified_text = self.anonymizer.anonymize(self.user_text)
         
         modified_text_expected = (
             "Le [ORG1] est une banque [LOC1], elle comprend le [ORG2] qui est une banque située en [LOC2]"
@@ -49,7 +49,7 @@ class TestFacerAnonymizer(unittest.TestCase):
         }
 
         self.assertEqual(modified_text, modified_text_expected)
-        self.assertEqual(entity_ids, entity_ids_expected)
+        self.assertEqual(self.anonymizer.entity_ids, entity_ids_expected)
 
     def test_desanonymizer(self):
         self.anonymizer.entity_ids = {

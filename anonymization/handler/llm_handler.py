@@ -1,4 +1,5 @@
 from mistralai import Mistral
+from anonymization import FacerAnonymizer
 
 class LLMHandler:
     def __init__(self, provider="mistral", api_key=None, model=None):
@@ -11,6 +12,7 @@ class LLMHandler:
         self.provider = provider
         self.api_key = api_key
         self.model = model
+        self.anonymizer = FacerAnonymizer(is_log_anonymizer=True)
         
         if provider == "mistral":
             self.client = Mistral(api_key=self.api_key)
@@ -23,10 +25,17 @@ class LLMHandler:
         :param text: Le texte à envoyer au LLM.
         :return: La réponse du modèle.
         """
+        anonymized_text  = self.anonymizer.anonymize(text)
+        
         if self.provider == "mistral":
-            return self._send_to_mistral(text)
+            response_anonymize = self._send_to_mistral(anonymized_text)
         else:
             raise ValueError(f"Provider {self.provider} is not supported yet.")
+        
+        response = self.anonymizer.desanonymize(response_anonymize)
+
+        return response
+        
 
     def _send_to_mistral(self, text):
         """
