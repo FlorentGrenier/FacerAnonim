@@ -14,6 +14,10 @@ Ce projet permet d'anonymiser des entités nommées (personnes, organisations, l
 Le projet ne prend en charge que la langue française pour le moment.**  
 **Cette fonctionnalité est en cours de développement (WIP) et pourrait être étendue à d'autres langues dans le futur.
 
+## RoadMap
+
+- Intégration API : En cours
+
 ## Installation
 ### Prérequis
 - Python 3.x
