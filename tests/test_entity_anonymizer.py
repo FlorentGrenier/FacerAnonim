@@ -32,7 +32,7 @@ class TestFacerAnonymizer(unittest.TestCase):
         ]
 
     def test_anonymizer(self):
-        modified_text, entity_ids = self.anonymizer.anonymizer(self.user_text)
+        modified_text, entity_ids = self.anonymizer.anonymize(self.user_text)
         
         modified_text_expected = (
             "Le [ORG1] est une banque [LOC1], elle comprend le [ORG2] qui est une banque située en [LOC2]"
@@ -69,7 +69,7 @@ class TestFacerAnonymizer(unittest.TestCase):
             "qui restent des piliers stratégiques du groupe."
         )
 
-        final_text = self.anonymizer.desanonymizer(generated_text)
+        final_text = self.anonymizer.desanonymize(generated_text)
 
         final_text_expected = ("et qui jouent un rôle clé dans le développement et la diversification des activités bancaires du groupe."
                                "Ces filiales couvrent des domaines variés tels que la gestion d'actifs, le financement des entreprises,"

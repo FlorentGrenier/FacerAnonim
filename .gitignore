@@ -1,5 +1,6 @@
 .env
 __pycache__
-tests/test.ipynb
+*.ipynb
 Anonymisation.code-workspace
 launch.json
+*.json

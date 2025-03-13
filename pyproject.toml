@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "anonymization"
+version = "0.1.0"
+authors = [
+  { name="Florent Grenier" },
+]
+description = "A Python library for text anonymization."
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "mistralai==1.2.6",
+    "transformers==4.49.0",
+    "pytest==8.3.5",
+    "unittest-xml-reporting==3.2.0",
+    "torch==2.6.0",
+    "tiktoken==0.9.0",
+    "protobuf==6.30.0",
+    "sentencepiece==0.2.0",
+    "cmake==3.31.6"
+]

@@ -1,6 +1,6 @@
 import unittest
-from entity_anonymizer import FacerAnonymizer
-from llm_handler import LLMHandler
+from anonymization.entity_anonymizer import FacerAnonymizer
+from anonymization.handler.llm_handler import LLMHandler
 from unittest.mock import MagicMock
 
 class TestIntegration(unittest.TestCase):

@@ -11,7 +11,7 @@ class FacerAnonymizer:
         self.log_anonymizer = is_log_anonymizer
         self.log_filename = log_filename
 
-    def anonymizer(self, text):
+    def anonymize(self, text):
         """
         Anonymise le texte en remplaçant les entités par des identifiants uniques.
         :param text: Le texte à anonymiser
@@ -25,9 +25,9 @@ class FacerAnonymizer:
         if self.log_anonymizer:
             self._log_anonymization_to_file(clean_text, entity_ids)
       
-        return clean_text, entity_ids
+        return clean_text
 
-    def desanonymizer(self, text):
+    def desanonymize(self, text):
         """
         Restaure le texte original en remplaçant les identifiants par les entités.
         :param text: Le texte anonymisé avec des identifiants

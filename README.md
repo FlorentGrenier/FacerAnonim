@@ -16,12 +16,55 @@ Le projet ne prend en charge que la langue française pour le moment.**
 
 ## Installation
 ### Prérequis
-- Python 3.x
-- Bibliothèques requises :
+- Python >=3.10
 
 ```python 
-pip install -r requirements.txt
+pip install -e .
 ```
+## Utilisation
+### Exemple de code
+```python 
+from anonymization import FacerAnonymizer
+from mistralai import Mistral
+
+client= Mistral(api_key=os.environ["API_KEY_MISTRAL"])
+
+anonymizer = FacerAnonymizer()
+anonymized_text = anonymizer.anonymizer("Le Crédit Mutuel Arkéa est une banque Française")
+
+response = client.chat.complete(
+            model = "mistral-large-latest",
+            messages = [
+                {
+                    "role": "user",
+                    "content": anonymized_text,
+                },
+            ]
+        )
+
+response = anonymizer.desanonymizer(response.choices[0].message.content)
+```
+<!--
+### Prise en charge des modèles LLM
+
+Ce projet prend actuellement en charge les modèles suivants :
+
+- **Mistral** (via l'API Mistral)
+
+Vous pouvez configurer le modèle souhaité lors de l'initialisation du handler LLM. Exemple :
+
+```python
+from anonymization import FacerAnonymizer, LLMHandler
+import os
+
+anonymizer = FacerAnonymizer(is_log_anonymizer=False)
+anonymized_text  = anonymizer.anonymize('Bonjour je m\'apelle Tom')[0]
+llm_handler = LLMHandler(provider="mistral", api_key=os.environ["API_KEY_MISTRAL"])
+response_llm = llm_handler.send_to_llm(anonymized_text)
+response = anonymizer.desanonymize(response_llm)
+```
+-->
+
 ## Fonctionnement
 ```mermaid
 ---
@@ -56,43 +99,6 @@ stateDiagram-v2
         C1: Application du remplacement
     }
 ```
-
-## Utilisation
-### Exemple de code
-```python 
-from anonymization import FacerAnonymizer
-from mistralai import Mistral
-
-client= Mistral(api_key=os.environ["API_KEY_MISTRAL"])
-
-anonymizer = FacerAnonymizer()
-anonymized_text = anonymizer.anonymizer("Le Crédit Mutuel Arkéa est une banque Française")
-
-response = client.chat.complete(
-            model = "mistral-large-latest",
-            messages = [
-                {
-                    "role": "user",
-                    "content": anonymized_text,
-                },
-            ]
-        )
-
-response = anonymizer.desanonymizer(response.choices[0].message.content)
-```
-<!--
-### Prise en charge des modèles LLM
-
-Ce projet prend actuellement en charge les modèles suivants :
-
-- **Mistral** (via l'API Mistral)
-
-Vous pouvez configurer le modèle souhaité lors de l'initialisation du handler LLM. Exemple :
-
-```python
-llm_handler = LLMHandler(provider="mistral", api_key=os.environ["API_KEY_MISTRAL"])
-```
--->
 
 ## Tests
 
